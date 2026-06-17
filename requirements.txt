@@ -1,0 +1,32 @@
+# Data & ML
+scikit-learn>=1.4.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Deep Learning / NLP
+torch>=2.1.0
+transformers>=4.40.0
+setfit>=1.0.0
+sentence-transformers>=3.0.0
+datasets>=2.18.0
+evaluate>=0.4.0
+accelerate>=0.27.0
+
+# APIs
+anthropic>=0.40.0    # dataset generation
+mistralai>=1.0.0     # Ministral 8B classifier (stratégie 4)
+
+# Streamlit dashboard
+streamlit>=1.35.0
+plotly>=5.20.0
+
+# Utils
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# Notebook support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+ipywidgets>=8.0.0

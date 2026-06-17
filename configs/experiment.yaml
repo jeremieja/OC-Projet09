@@ -1,0 +1,61 @@
+seeds: [42, 123, 456, 789, 1024]
+few_shot_regimes: [8, 16, 32, 64]
+datasets: ["newsgroups", "emails"]
+
+newsgroups:
+  n_classes: 8
+  test_size: 0.2
+  selected_classes:
+    - "sci.med"
+    - "sci.space"
+    - "comp.graphics"
+    - "comp.os.ms-windows.misc"
+    - "rec.autos"
+    - "rec.sport.hockey"
+    - "talk.politics.guns"
+    - "talk.religion.misc"
+
+emails:
+  n_classes: 8
+  test_size: 0.2
+  n_samples_per_class: 225
+  classes:
+    - "inscription"
+    - "sponsor"
+    - "arbitrage-officiels"
+    - "parent"
+    - "federation"
+    - "logistique-matchday"
+    - "indemnites-coachs"
+    - "divers-administratif"
+
+setfit:
+  # sentence-camembert-large crashe le GPU RTX 5070 (sm_120) lors du backward contrastif
+  # Remplacé par paraphrase-multilingual-mpnet-base-v2, GPU-compatible et top MTEB-fr
+  backbone_camembert: "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+  backbone_modernbert_en: "answerdotai/ModernBERT-base"
+  backbone_modernbert_ml: "intfloat/multilingual-e5-large-instruct"
+  num_epochs: 1
+  batch_size: 16
+
+camembert:
+  model_name: "almanach/camembert-base"
+  num_epochs: 3
+  batch_size: 16
+  learning_rate: 2.0e-5
+  max_length: 256
+
+ministral:
+  model: "ministral-8b-latest"
+  few_shot_k: 8
+  few_shot_seeds: [42, 123, 456]
+  max_tokens: 60
+  temperature: 0.0
+
+hybrid:
+  thresholds: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+
+generation:
+  model: "claude-haiku-4-5-20251001"   # rapide et économique pour 1800 appels
+  n_samples_per_class: 225
+  max_tokens: 500

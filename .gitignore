@@ -1,0 +1,42 @@
+# ─── Environnement Python ───────────────────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# ─── Secrets (NE JAMAIS committer les clés API) ─────────────────────────
+.env
+.streamlit/secrets.toml
+
+# ─── Gros modèles entraînés (NON déployés : torch/setfit/camembert) ──────
+# On exclut tout models_saved/ SAUF les modèles légers deploy_*.joblib
+# nécessaires au dashboard cloud (réintégrés explicitement ci-dessous).
+models_saved/*
+!models_saved/deploy_emails.joblib
+!models_saved/deploy_newsgroups.joblib
+
+# ─── Données volumineuses / régénérables ────────────────────────────────
+# Le cache HuggingFace, les datasets bruts, les JSON de génération.
+data/raw/
+data/generated/
+# On GARDE data/processed/emails.csv (nécessaire à l'EDA du dashboard).
+
+# ─── Checkpoints d'entraînement HuggingFace (TRÈS volumineux, 3+ Go) ─────
+checkpoints/
+
+# ─── Résultats d'expériences ────────────────────────────────────────────
+# On exclut les 383 JSON individuels et les gros CSV de prédictions.
+# Le dashboard "Performances" s'appuiera sur results_aggregated.csv (léger),
+# qu'on garde versionné.
+results/runs/
+results/aggregated/predictions_*.csv
+
+# ─── Config locale Claude Code (inutile sur le repo) ────────────────────
+.claude/
+
+# ─── Divers ─────────────────────────────────────────────────────────────
+*.log
+.DS_Store
+Thumbs.db
