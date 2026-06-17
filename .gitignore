@@ -40,3 +40,6 @@ results/aggregated/predictions_*.csv
 *.log
 .DS_Store
 Thumbs.db
+
+# ─── Livrables de soutenance (documents perso, hors code) ────────────────
+*.docx

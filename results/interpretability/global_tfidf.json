@@ -1,0 +1,402 @@
+{
+  "arbitrage-officiels": [
+    {
+      "mot": "arbitres",
+      "poids": 3.685
+    },
+    {
+      "mot": "arbitre",
+      "poids": 3.044
+    },
+    {
+      "mot": "arbitres pour",
+      "poids": 2.447
+    },
+    {
+      "mot": "match",
+      "poids": 1.812
+    },
+    {
+      "mot": "désignation",
+      "poids": 1.598
+    },
+    {
+      "mot": "les indemnités",
+      "poids": 1.595
+    },
+    {
+      "mot": "samedi",
+      "poids": 1.583
+    },
+    {
+      "mot": "arbitrage",
+      "poids": 1.55
+    },
+    {
+      "mot": "indemnités",
+      "poids": 1.541
+    },
+    {
+      "mot": "les arbitres",
+      "poids": 1.423
+    },
+    {
+      "mot": "match de",
+      "poids": 1.422
+    },
+    {
+      "mot": "de samedi",
+      "poids": 1.418
+    }
+  ],
+  "divers-administratif": [
+    {
+      "mot": "attestation",
+      "poids": 3.317
+    },
+    {
+      "mot": "une attestation",
+      "poids": 2.891
+    },
+    {
+      "mot": "attestation de",
+      "poids": 2.203
+    },
+    {
+      "mot": "envoyer",
+      "poids": 1.93
+    },
+    {
+      "mot": "subvention",
+      "poids": 1.665
+    },
+    {
+      "mot": "budget",
+      "poids": 1.549
+    },
+    {
+      "mot": "besoin",
+      "poids": 1.478
+    },
+    {
+      "mot": "me envoyer",
+      "poids": 1.326
+    },
+    {
+      "mot": "de subvention",
+      "poids": 1.262
+    },
+    {
+      "mot": "prévisionnel",
+      "poids": 1.172
+    },
+    {
+      "mot": "certificat",
+      "poids": 1.156
+    },
+    {
+      "mot": "dossier",
+      "poids": 1.132
+    }
+  ],
+  "federation": [
+    {
+      "mot": "convocation",
+      "poids": 2.509
+    },
+    {
+      "mot": "championnat",
+      "poids": 2.501
+    },
+    {
+      "mot": "la fédération",
+      "poids": 2.428
+    },
+    {
+      "mot": "fédération",
+      "poids": 2.307
+    },
+    {
+      "mot": "championnat régional",
+      "poids": 2.065
+    },
+    {
+      "mot": "régional",
+      "poids": 2.002
+    },
+    {
+      "mot": "la convocation",
+      "poids": 1.492
+    },
+    {
+      "mot": "championnats",
+      "poids": 1.432
+    },
+    {
+      "mot": "participation",
+      "poids": 1.403
+    },
+    {
+      "mot": "le championnat",
+      "poids": 1.386
+    },
+    {
+      "mot": "championnats régionaux",
+      "poids": 1.314
+    },
+    {
+      "mot": "régionaux",
+      "poids": 1.228
+    }
+  ],
+  "indemnites-coachs": [
+    {
+      "mot": "kilométriques",
+      "poids": 3.037
+    },
+    {
+      "mot": "indemnités",
+      "poids": 2.654
+    },
+    {
+      "mot": "indemnités kilométriques",
+      "poids": 2.227
+    },
+    {
+      "mot": "frais",
+      "poids": 2.006
+    },
+    {
+      "mot": "mois",
+      "poids": 1.787
+    },
+    {
+      "mot": "coach",
+      "poids": 1.691
+    },
+    {
+      "mot": "déplacements",
+      "poids": 1.69
+    },
+    {
+      "mot": "remboursement",
+      "poids": 1.671
+    },
+    {
+      "mot": "justificatifs",
+      "poids": 1.656
+    },
+    {
+      "mot": "km",
+      "poids": 1.476
+    },
+    {
+      "mot": "les indemnités",
+      "poids": 1.473
+    },
+    {
+      "mot": "kilométriques de",
+      "poids": 1.421
+    }
+  ],
+  "inscription": [
+    {
+      "mot": "tarifs",
+      "poids": 2.388
+    },
+    {
+      "mot": "les tarifs",
+      "poids": 2.329
+    },
+    {
+      "mot": "documents",
+      "poids": 2.314
+    },
+    {
+      "mot": "inscrire",
+      "poids": 2.257
+    },
+    {
+      "mot": "inscription",
+      "poids": 2.24
+    },
+    {
+      "mot": "adhésion",
+      "poids": 2.052
+    },
+    {
+      "mot": "licence",
+      "poids": 1.88
+    },
+    {
+      "mot": "saison",
+      "poids": 1.565
+    },
+    {
+      "mot": "les documents",
+      "poids": 1.548
+    },
+    {
+      "mot": "la saison",
+      "poids": 1.544
+    },
+    {
+      "mot": "quels",
+      "poids": 1.477
+    },
+    {
+      "mot": "combien",
+      "poids": 1.454
+    }
+  ],
+  "logistique-matchday": [
+    {
+      "mot": "vestiaires",
+      "poids": 3.213
+    },
+    {
+      "mot": "match",
+      "poids": 2.534
+    },
+    {
+      "mot": "les vestiaires",
+      "poids": 2.388
+    },
+    {
+      "mot": "buvette",
+      "poids": 2.294
+    },
+    {
+      "mot": "terrain",
+      "poids": 2.177
+    },
+    {
+      "mot": "la buvette",
+      "poids": 2.147
+    },
+    {
+      "mot": "de match",
+      "poids": 1.968
+    },
+    {
+      "mot": "samedi",
+      "poids": 1.94
+    },
+    {
+      "mot": "feuille de",
+      "poids": 1.697
+    },
+    {
+      "mot": "feuille",
+      "poids": 1.693
+    },
+    {
+      "mot": "la feuille",
+      "poids": 1.555
+    },
+    {
+      "mot": "réservation",
+      "poids": 1.396
+    }
+  ],
+  "parent": [
+    {
+      "mot": "entraînement",
+      "poids": 2.669
+    },
+    {
+      "mot": "pourra",
+      "poids": 1.76
+    },
+    {
+      "mot": "fils",
+      "poids": 1.687
+    },
+    {
+      "mot": "entraînement de",
+      "poids": 1.652
+    },
+    {
+      "mot": "pourra pas",
+      "poids": 1.605
+    },
+    {
+      "mot": "il",
+      "poids": 1.492
+    },
+    {
+      "mot": "pas venir",
+      "poids": 1.398
+    },
+    {
+      "mot": "jeudi",
+      "poids": 1.382
+    },
+    {
+      "mot": "ne pourra",
+      "poids": 1.367
+    },
+    {
+      "mot": "venir",
+      "poids": 1.311
+    },
+    {
+      "mot": "grave",
+      "poids": 1.307
+    },
+    {
+      "mot": "cheville",
+      "poids": 1.306
+    }
+  ],
+  "sponsor": [
+    {
+      "mot": "visibilité",
+      "poids": 2.353
+    },
+    {
+      "mot": "partenariat",
+      "poids": 2.189
+    },
+    {
+      "mot": "maillots",
+      "poids": 1.815
+    },
+    {
+      "mot": "discuter",
+      "poids": 1.653
+    },
+    {
+      "mot": "logo",
+      "poids": 1.609
+    },
+    {
+      "mot": "sur",
+      "poids": 1.473
+    },
+    {
+      "mot": "entreprise",
+      "poids": 1.471
+    },
+    {
+      "mot": "pourrait",
+      "poids": 1.413
+    },
+    {
+      "mot": "un partenariat",
+      "poids": 1.268
+    },
+    {
+      "mot": "échange",
+      "poids": 1.226
+    },
+    {
+      "mot": "en échange",
+      "poids": 1.224
+    },
+    {
+      "mot": "on",
+      "poids": 1.193
+    }
+  ]
+}

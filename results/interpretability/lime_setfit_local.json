@@ -1,0 +1,54 @@
+{
+  "mail": "Bonjour,\n\nJe vous contacte car nous serions intéressés pour... enfin, pour organiser un match amical avec votre équipe, si c'est possible bien sûr. Je ne sais pas trop comment ça marche exactement, mais il nous faudrait le terrain pour un samedi après-midi, avec les vestiaires et tout ça.\n\nEst-ce que quelqu'un pourrait nous dire combien ça coûte et si les arbitres, c'est vous qui les trouvez ou no",
+  "prediction": "logistique-matchday",
+  "mots_influents": [
+    {
+      "mot": "vestiaires",
+      "poids": 0.1564
+    },
+    {
+      "mot": "samedi",
+      "poids": 0.0734
+    },
+    {
+      "mot": "match",
+      "poids": 0.0689
+    },
+    {
+      "mot": "midi",
+      "poids": 0.0627
+    },
+    {
+      "mot": "arbitres",
+      "poids": -0.0575
+    },
+    {
+      "mot": "terrain",
+      "poids": 0.0575
+    },
+    {
+      "mot": "faudrait",
+      "poids": 0.0364
+    },
+    {
+      "mot": "nous",
+      "poids": -0.0186
+    },
+    {
+      "mot": "organiser",
+      "poids": 0.0145
+    },
+    {
+      "mot": "Désolé",
+      "poids": 0.0106
+    },
+    {
+      "mot": "Merci",
+      "poids": 0.0092
+    },
+    {
+      "mot": "si",
+      "poids": 0.0091
+    }
+  ]
+}

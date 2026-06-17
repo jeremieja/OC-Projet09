@@ -1,0 +1,84 @@
+{
+  "mots_influents_globaux": [
+    {
+      "mot": "attestation",
+      "importance_cumulee": 2.568
+    },
+    {
+      "mot": "arbitres",
+      "importance_cumulee": 1.781
+    },
+    {
+      "mot": "arbitre",
+      "importance_cumulee": 1.589
+    },
+    {
+      "mot": "fédération",
+      "importance_cumulee": 1.263
+    },
+    {
+      "mot": "indemnités",
+      "importance_cumulee": 1.116
+    },
+    {
+      "mot": "indemnité",
+      "importance_cumulee": 0.839
+    },
+    {
+      "mot": "adhésion",
+      "importance_cumulee": 0.584
+    },
+    {
+      "mot": "inscrire",
+      "importance_cumulee": 0.578
+    },
+    {
+      "mot": "médical",
+      "importance_cumulee": 0.449
+    },
+    {
+      "mot": "entraînement",
+      "importance_cumulee": 0.364
+    },
+    {
+      "mot": "championnat",
+      "importance_cumulee": 0.359
+    },
+    {
+      "mot": "documents",
+      "importance_cumulee": 0.326
+    },
+    {
+      "mot": "convocation",
+      "importance_cumulee": 0.315
+    },
+    {
+      "mot": "inscription",
+      "importance_cumulee": 0.299
+    },
+    {
+      "mot": "Arbitres",
+      "importance_cumulee": 0.293
+    },
+    {
+      "mot": "fils",
+      "importance_cumulee": 0.281
+    },
+    {
+      "mot": "licence",
+      "importance_cumulee": 0.272
+    },
+    {
+      "mot": "remboursés",
+      "importance_cumulee": 0.269
+    },
+    {
+      "mot": "match",
+      "importance_cumulee": 0.209
+    },
+    {
+      "mot": "samedi",
+      "importance_cumulee": 0.208
+    }
+  ]
+}
