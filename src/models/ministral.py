@@ -24,7 +24,24 @@ from typing import List, Optional, Tuple
 
 import httpx
 from dotenv import load_dotenv
-from tqdm import tqdm
+
+# tqdm est optionnel : utile pour la barre de progression CLI, inutile dans le
+# dashboard. On fournit un fallback no-op pour que le module fonctionne même
+# si tqdm n'est pas installé (ex: environnement de déploiement minimal).
+try:
+    from tqdm import tqdm
+except ImportError:  # pragma: no cover
+    class tqdm:  # type: ignore
+        """Remplacement minimal de tqdm quand le paquet est absent."""
+        def __init__(self, iterable=None, **kwargs):
+            self._iterable = iterable if iterable is not None else []
+        def __iter__(self):
+            return iter(self._iterable)
+        def set_postfix(self, *args, **kwargs):
+            pass
+        @staticmethod
+        def write(msg, *args, **kwargs):
+            print(msg)
 
 load_dotenv()
 
