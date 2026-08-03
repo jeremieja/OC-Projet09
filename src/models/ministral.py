@@ -12,10 +12,9 @@ Deux modes testés :
 Avantage principal : déploiement instantané chez un nouveau club sans aucune donnée.
 Inconvénient : latence ~500ms-2s par mail et coût API récurrent.
 
-Note technique : on appelle l'API REST Mistral directement via httpx plutôt que
-le SDK `mistralai`. Le package SDK est systématiquement corrompu à l'installation
-sur cette machine (Windows Defender supprime les fichiers principaux du package).
-L'endpoint REST est simple et stable, ce contournement est donc robuste.
+Implémentation : appels directs à l'API REST Mistral via httpx. L'endpoint est
+stable et documenté, ce qui évite une dépendance supplémentaire au SDK et allège
+l'environnement de déploiement du dashboard.
 """
 import json
 import os
@@ -25,9 +24,9 @@ from typing import List, Optional, Tuple
 import httpx
 from dotenv import load_dotenv
 
-# tqdm est optionnel : utile pour la barre de progression CLI, inutile dans le
-# dashboard. On fournit un fallback no-op pour que le module fonctionne même
-# si tqdm n'est pas installé (ex: environnement de déploiement minimal).
+# tqdm sert uniquement à la barre de progression en ligne de commande. On prévoit
+# un substitut neutre pour que le module reste importable dans un environnement
+# de déploiement minimal où le paquet n'est pas installé.
 try:
     from tqdm import tqdm
 except ImportError:  # pragma: no cover

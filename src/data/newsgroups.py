@@ -46,11 +46,10 @@ def load_newsgroups(test_size: float = 0.2) -> Tuple[pd.DataFrame, pd.DataFrame]
         remove=("headers", "footers", "quotes"),
     )
 
-    # Conversion en DataFrame avec labels textuels (plus lisible que les indices).
-    # IMPORTANT : on indexe via train_raw.target_names (ordre réel de sklearn, qui
-    # trie TOUJOURS les catégories par ordre alphabétique), et NON via SELECTED_CLASSES
-    # (notre ordre custom). Sinon les labels sont décalés par rapport aux textes —
-    # bug silencieux qui fausse toute la vérité-terrain.
+    # Conversion en DataFrame avec des labels textuels, plus lisibles que les indices.
+    # Les indices de `target` réfèrent à `target_names`, que scikit-learn trie par ordre
+    # alphabétique indépendamment de l'ordre demandé dans SELECTED_CLASSES. On indexe
+    # donc impérativement sur `target_names` pour garantir l'appariement texte / label.
     train_df = pd.DataFrame({
         "text": train_raw.data,
         "label": [train_raw.target_names[i] for i in train_raw.target],

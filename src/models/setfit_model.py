@@ -26,14 +26,15 @@ from setfit import SetFitModel
 from setfit import Trainer as SetFitTrainer
 from setfit import TrainingArguments
 
-# Backbone multilingue de référence — remplace sentence-camembert-large qui crashe
-# le GPU RTX 5070 (sm_120) lors du backward pass contrastif (incompatibilité transformers 5.9.x)
+# Backbone principal : Sentence Transformer multilingue de référence du benchmark
+# MTEB-fr, adapté à des mails en français et compatible d'un entraînement sur GPU récent.
 BACKBONE_CAMEMBERT = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
-# ModernBERT anglais — utilisé sur 20 Newsgroups pour tester l'apport architectural
+
+# Variante « modernité architecturale » (2024), anglophone : évaluée sur 20 Newsgroups.
 BACKBONE_MODERNBERT_EN = "answerdotai/ModernBERT-base"
-# mmBERT-base (2025) — ModernBERT entraîné sur 3T tokens en 1800+ langues (jhu-clsp)
-# Combine modernité architecturale (Flash Attention 2, 8192 tokens) et couverture
-# multilingue complète : testé sur les DEUX datasets pour observer le gain vs variantes
+
+# Variante mmBERT (2025) : architecture ModernBERT entraînée sur 3 000 milliards de
+# tokens et 1 800+ langues. Seul backbone à combiner modernité et multilinguisme natif.
 BACKBONE_MMBERT = "jhu-clsp/mmBERT-base"
 
 
@@ -48,16 +49,19 @@ def train_and_evaluate(
     max_steps: int = 1500,
 ) -> Tuple[dict, SetFitModel]:
     """
-    Entraîne SetFit et évalue sur le jeu de test.
+    Entraîne SetFit sur les données fournies et évalue sur le jeu de test.
 
-    num_epochs=1 suffit généralement pour SetFit car la génération de paires
-    contrastives multiplie déjà le signal d'apprentissage. Augmenter les epochs
-    risque le surapprentissage avec peu de données.
+    Args:
+        train_texts / train_labels : exemples d'entraînement (peu nombreux en few-shot)
+        test_texts / test_labels   : jeu de test complet pour l'évaluation
+        backbone   : identifiant HuggingFace du Sentence Transformer de base
+        num_epochs : 1 suffit généralement — la génération de paires contrastives
+                     multiplie déjà le signal ; plus d'epochs risque le surapprentissage
+        batch_size : taille des lots de paires contrastives
+        max_steps  : plafond d'itérations contrastives (voir commentaire plus bas)
 
-    body_learning_rate : taux pour le Sentence Transformer (fin)
-    head_learning_rate : taux pour la tête logistique (plus élevé, converge vite)
-    end_to_end=False : on entraîne d'abord le body seul, puis la tête seule
-                       (plus stable avec peu de données qu'un entraînement joint)
+    Returns:
+        (dict de métriques, modèle SetFit entraîné)
     """
     from src.evaluation.metrics import compute_metrics
 
@@ -66,11 +70,8 @@ def train_and_evaluate(
     test_ds = Dataset.from_dict({"text": test_texts, "label": test_labels})
 
     # labels= est requis dans SetFit >= 1.1 quand on part d'un Sentence Transformer brut
-    # (pas d'un modèle SetFit pré-entraîné). Sans ce paramètre, SetFit cherche
-    # config_setfit.json sur HuggingFace Hub et échoue avec une 404.
-    #
-    # labels= requis dans SetFit >= 1.1 quand on part d'un Sentence Transformer brut
-    # (sinon SetFit cherche config_setfit.json sur le Hub et échoue avec une 404).
+    # (et non d'un modèle SetFit déjà entraîné). Sans ce paramètre, SetFit cherche un
+    # fichier config_setfit.json sur le Hub HuggingFace et échoue avec une erreur 404.
     labels = sorted(set(train_labels))
     model = SetFitModel.from_pretrained(backbone, labels=labels)
 
@@ -84,10 +85,10 @@ def train_and_evaluate(
         body_learning_rate=1e-5,  # fine-tuning du transformer (petit pour ne pas tout oublier)
         head_learning_rate=1e-2,  # entraînement de la tête logistique (plus agressif)
         report_to="none",
-        # max_steps plafonne le nb d'itérations contrastives. SetFit génère des paires de
-        # façon quadratique (n²) : sans plafond, les régimes 64/full explosent (>30 min/run).
-        # 1500 steps suffisent à la convergence (cf. papier SetFit) et ramènent chaque run
-        # à ~1 min, quel que soit le volume de données. -1 = pas de plafond (few-shot léger).
+        # SetFit génère les paires contrastives de façon quadratique : le nombre de pas
+        # croît donc très vite avec la taille du jeu d'entraînement. max_steps borne ce
+        # budget pour garder un temps d'entraînement comparable entre tous les régimes,
+        # la convergence étant atteinte bien avant ce plafond.
         max_steps=max_steps,
     )
 

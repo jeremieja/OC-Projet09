@@ -27,7 +27,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.data.email_dataset import load_emails, CLASSES
+from src.data.email_dataset import load_emails
 from src.utils.logging import get_logger
 
 logger = get_logger("feature_importance")

@@ -38,25 +38,21 @@ from src.utils.logging import get_logger
 SEEDS = [42, 123, 456, 789, 1024]
 REGIMES = [8, 16, 32, 64]
 
-# Dictionnaire backbone_key -> (identifiant HuggingFace, datasets compatibles)
-# La compatibilité est linguistique :
-#   - mpnet-multilingual : multilingue → les deux datasets
-#   - ModernBERT-base    : anglais → newsgroups uniquement
-#   - mmBERT             : ModernBERT multilingue (2025) → les deux datasets
-# Le rôle "ModernBERT multilingue" est tenu par mmBERT (vrai ModernBERT entraîné
-# sur 1800+ langues), et non plus par e5-large-instruct (XLM-RoBERTa, mal nommé
-# et instable : gradients NaN lors du fine-tuning contrastif sur RTX 5070).
+# Dictionnaire backbone_key -> (identifiant HuggingFace, datasets compatibles).
+# La compatibilité est d'abord linguistique : un backbone anglophone n'est évalué
+# que sur le corpus anglais, un backbone multilingue sur les deux.
 BACKBONES = {
+    # Multilingue : évalué sur les deux corpus, sert de référence de comparaison.
     "camembert":      (BACKBONE_CAMEMBERT,      ["newsgroups", "emails"]),
+    # Anglophone : porte l'angle « modernité architecturale » sur 20 Newsgroups.
     "modernbert_en":  (BACKBONE_MODERNBERT_EN,  ["newsgroups"]),
-    # mmBERT ~5× plus lent que mpnet sur RTX 5070. Évalué sur les emails uniquement
-    # (le cas d'usage métier français), avec un plafond de steps réduit pour rester
-    # dans des temps raisonnables. Newsgroups (anglais) est déjà couvert par ModernBERT-EN
-    # pour l'angle "modernité architecturale".
+    # Multilingue et moderne : évalué sur le cas d'usage métier (mails français),
+    # l'angle anglophone étant déjà couvert par ModernBERT ci-dessus.
     "mmbert":         (BACKBONE_MMBERT,         ["emails"]),
 }
 
-# Plafond de steps contrastifs par backbone (1500 par défaut, 600 pour mmBERT qui est lent)
+# Budget d'itérations contrastives par backbone. mmBERT étant sensiblement plus
+# coûteux à entraîner, on réduit son plafond pour garder des durées comparables.
 MAX_STEPS_OVERRIDE = {
     "mmbert": 600,
 }

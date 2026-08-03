@@ -10,8 +10,7 @@ Usage :
 from pathlib import Path
 
 from docx import Document
-from docx.shared import Pt, RGBColor, Inches
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Pt, RGBColor
 
 OUT = Path(__file__).parents[1] / "Preparation_soutenance_biblio.docx"
 
@@ -191,9 +190,11 @@ def build():
                 "51 modèles évalués, 8 catégories de tâches, 18 datasets.",
             ],
             "jury": "« Pourquoi un backbone multilingue (mpnet) et pas un modèle français "
-                    "spécialisé ? » → MTEB-fr montre que les bons modèles multilingues sur "
-                    "similarité de phrases rivalisent voire dépassent les spécialisés FR ; "
-                    "et techniquement, sentence-camembert-large crashait mon GPU Blackwell.",
+                    "spécialisé ? » → MTEB-fr montre que les bons modèles multilingues "
+                    "entraînés sur la similarité de phrases rivalisent avec les modèles "
+                    "spécialisés français ; le modèle français initialement envisagé "
+                    "présentait par ailleurs une incompatibilité avec notre environnement "
+                    "d'entraînement.",
         },
         {
             "titre": "5. Reimers & Gurevych (2020) — Sentence Embeddings multilingues par distillation",

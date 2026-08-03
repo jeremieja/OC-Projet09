@@ -4,11 +4,9 @@ Expériences Stratégie 2 — Fine-tuning CamemBERT.
 Lance 25 runs par dataset (5 régimes × 5 seeds). Chaque run fine-tune
 CamemBERT depuis zéro sur le sous-ensemble d'entraînement correspondant.
 
-Note sur la durée : CamemBERT est un modèle ~110M paramètres.
-Avec la RTX 5070, compter environ :
-  - ~30s par run en few-shot (8-64 exemples, peu de gradient steps)
-  - ~5-10min pour le régime full data (4000+ exemples × 3 epochs)
-  Soit ~30-45min par dataset.
+Ordres de grandeur (GPU grand public, modèle de ~110M paramètres) :
+  - quelques dizaines de secondes par run en few-shot (peu de pas de gradient) ;
+  - quelques minutes pour le régime full data (3 epochs sur l'ensemble du train).
 
 CamemBERT a besoin des mappings label<->entier car Hugging Face Trainer
 travaille avec des entiers, pas des chaînes de caractères.

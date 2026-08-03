@@ -63,22 +63,31 @@ def run(dataset_name: str, with_ministral: bool) -> None:
 
     # --- 2. CamemBERT ---
     logger.info("CamemBERT (fine-tuning, ~5 min)...")
+    import torch
+    from transformers import AutoTokenizer
+    from transformers import pipeline as hf_pipeline
+
+    from src.models.camembert import MODEL_NAME as CAMEMBERT_NAME
     from src.models.camembert import train_and_evaluate as camembert_train
-    import numpy as np
-    from transformers import AutoTokenizer, AutoModelForSequenceClassification
-    # On réutilise la fonction d'entraînement, mais elle ne renvoie que les métriques.
-    # On ré-entraîne et prédit ici pour récupérer les labels prédits.
+
+    # train_and_evaluate ne renvoie que les métriques : on récupère le modèle entraîné
+    # pour refaire nous-mêmes les prédictions et obtenir les labels.
     _, cam_model = camembert_train(
         train_texts, train_labels, test_texts, test_labels,
         label2id=label2id, id2label=id2label,
         output_dir=f"models_saved/camembert_dump_{dataset_name}",
     )
-    # Prédiction avec le modèle entraîné
-    from transformers import pipeline as hf_pipeline
-    tok = AutoTokenizer.from_pretrained("almanach/camembert-base")
+
+    # device=0 utilise le premier GPU, -1 force le CPU : on choisit selon la machine
+    # pour que le script reste exécutable sans carte graphique.
+    device = 0 if torch.cuda.is_available() else -1
+    tok = AutoTokenizer.from_pretrained(CAMEMBERT_NAME)
     clf = hf_pipeline("text-classification", model=cam_model, tokenizer=tok,
-                      truncation=True, max_length=256, device=0,
+                      truncation=True, max_length=256, device=device,
                       batch_size=32)
+
+    # Le pipeline HF renvoie soit le vrai nom de classe (si id2label est configuré),
+    # soit un identifiant générique "LABEL_<id>" qu'on retraduit via id2label.
     cam_preds = [id2label[int(r["label"].split("_")[-1])] if r["label"].startswith("LABEL_")
                  else r["label"] for r in clf(test_texts)]
     out["pred_camembert"] = cam_preds

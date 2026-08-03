@@ -19,8 +19,10 @@ from typing import List, Tuple
 
 import numpy as np
 
-# Coût estimé par appel Ministral : ~170 tokens (150 input + 20 output) à $0.10/M tokens
-_COST_PER_CALL_USD = 0.10 / 1_000_000 * 170
+# Coût d'un appel Ministral : on réutilise la constante définie dans le module
+# ministral pour garantir que les deux stratégies (4 et 5) chiffrent le coût
+# de façon strictement identique (source de vérité unique).
+from src.models.ministral import _COST_PER_CALL_USD
 
 
 def route(

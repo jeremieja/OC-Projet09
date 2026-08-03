@@ -33,8 +33,10 @@ checkpoints/
 results/runs/
 results/aggregated/predictions_*.csv
 
-# ─── Config locale Claude Code (inutile sur le repo) ────────────────────
+# ─── Configuration locale d'éditeur / outillage ─────────────────────────
 .claude/
+.vscode/
+.idea/
 
 # ─── Divers ─────────────────────────────────────────────────────────────
 *.log

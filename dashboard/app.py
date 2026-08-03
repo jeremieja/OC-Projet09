@@ -30,7 +30,7 @@ ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT))
 
 from dashboard.theme import (  # noqa: E402
-    OKABE_ITO, COLOR_SUCCESS, COLOR_INFO, apply_accessible_layout, color_for_label,
+    OKABE_ITO, COLOR_SUCCESS, COLOR_INFO, apply_accessible_layout,
 )
 from dashboard.text_analysis import (  # noqa: E402
     add_text_stats, top_words, build_wordcloud_png,
