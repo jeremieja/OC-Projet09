@@ -43,5 +43,13 @@ results/aggregated/predictions_*.csv
 .DS_Store
 Thumbs.db
 
-# ─── Livrables de soutenance (documents perso, hors code) ────────────────
+# ─── Livrables bureautiques (documents de rendu, hors code) ─────────────
+# Le dépôt versionne le CODE qui produit ces documents (scripts/generate_*.py),
+# pas les documents eux-mêmes : ils sont régénérables et n'ont pas vocation à
+# être publiés avant l'évaluation.
 *.docx
+*.pptx
+*.pdf
+*.odt
+*.odp
+*.xlsx
