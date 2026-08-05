@@ -363,10 +363,11 @@ def build():
     bullet(doc, "Dataset synthétique : les mails sont générés par LLM. Leur vocabulaire est "
                 "peut-être plus « propre » et plus séparable que des mails réels, ce qui peut "
                 "surévaluer les performances (notamment le 0,99 de TF-IDF en full data).")
-    bullet(doc, "SetFit, modèle déployé final : c'est TF-IDF qui est déployé (léger, cloud), "
-                "non SetFit. Le champion few-shot n'est donc pas servi en production faute "
-                "d'infrastructure GPU — un écart entre l'optimum scientifique et l'optimum "
-                "d'ingénierie, assumé explicitement.")
+    bullet(doc, "Le dashboard ne démontre qu'une seule des quatre stratégies de la matrice : "
+                "celle du « club établi ». Dans ce régime, TF-IDF égale SetFit (0,992 contre "
+                "0,992) pour un modèle 500× plus léger, ce qui justifie de le servir ; mais "
+                "un produit complet devrait router vers la stratégie correspondant au volume "
+                "de données réellement disponible chez le client.")
     bullet(doc, "Confiance des LLM peu fiable : la confiance de Ministral est auto-déclarée "
                 "(souvent ~0,5), contrairement aux probabilités calibrées de TF-IDF/SetFit. "
                 "C'est pourquoi l'hybride se fonde sur la confiance de SetFit, pas du LLM.")

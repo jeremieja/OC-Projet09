@@ -501,11 +501,14 @@ def build():
     s = nouvelle(prs, L_CONTENU); titre_section(s, SECTIONS["ccl"])
     bloc_texte(s, "Limites et suites envisageables", [
         "Le jeu de données est synthétique : un corpus réel serait probablement plus ambigu.",
-        "Le modèle le plus performant à faibles volumes n'est pas celui qui est déployé, "
-        "faute d'infrastructure adaptée.",
+        "Le tableau de bord ne démontre qu'une seule des quatre stratégies recommandées.",
+        ("il sert le scénario « club établi », où la méthode historique égale SetFit "
+         "(0,992 contre 0,992) pour une fraction du poids ;",),
+        ("un produit complet routerait vers la stratégie adaptée au profil du club.",),
         "Pistes d'amélioration :",
         ("valider sur des mails réels anonymisés ;",),
-        ("héberger SetFit sur un service dédié et l'appeler depuis le tableau de bord ;",),
+        ("servir SetFit depuis un service dédié, pour couvrir le scénario « club en "
+         "phase d'installation » ;",),
         ("mesurer la calibration des scores de confiance ;",),
         ("faire étiqueter en priorité les mails les plus incertains.",),
     ], w=12.1)
