@@ -135,11 +135,20 @@ def learning_curves(df: pd.DataFrame, dataset: str, models: list, fname: str, ti
 # ── 3. Comparaison en full data ───────────────────────────────────────────────
 def fulldata_bars(df: pd.DataFrame, fname: str):
     sub = df[df["regime"] == "full"].copy()
-    order = ["tfidf_lr", "camembert", "setfit_camembert", "setfit_mmbert"]
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), dpi=200, sharey=True)
+    # Les variantes de socle SetFit diffèrent selon le corpus : ModernBERT est
+    # anglophone (donc évalué sur Newsgroups), mmBERT est multilingue et a été
+    # réservé au cas d'usage métier. On affiche dans chaque panneau les modèles
+    # réellement évalués sur ce corpus, plutôt qu'une case vide trompeuse.
+    ORDRE = {
+        "emails": ["tfidf_lr", "camembert", "setfit_camembert", "setfit_mmbert"],
+        "newsgroups": ["tfidf_lr", "camembert", "setfit_camembert", "setfit_modernbert_en"],
+    }
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), dpi=200)
     for ax, ds, titre in zip(axes, ["emails", "newsgroups"],
                              ["Mails de clubs sportifs", "20 Newsgroups"]):
+        order = ORDRE[ds]
         d = sub[sub["dataset"] == ds]
         d = d[d["model"].isin(order)].copy()
         d["ord"] = d["model"].map({m: i for i, m in enumerate(order)})
