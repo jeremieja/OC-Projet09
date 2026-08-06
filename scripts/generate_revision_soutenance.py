@@ -501,16 +501,68 @@ SLIDES = [
        "une librairie maintenue ». SetFit coche les trois, et j'ai poussé plus loin en "
        "testant des socles de 2024 et 2025.")]),
 
-    (8, "Les sources", "Montrer la rigueur bibliographique.",
-     ["Trois sources principales : l'article de recherche, l'article de blog officiel, "
-      "et le banc d'essai MTEB-fr qui justifie le socle.",
-      "Compléments pour chaque variante de socle testée."],
-     [("Quelle est votre source la plus importante et pourquoi ?",
-       "Tunstall et al. 2022 : c'est l'article fondateur, il décrit la méthode et fournit les "
-       "résultats de référence. Le blog Hugging Face en est la mise en pratique, avec le code "
-       "que j'ai réutilisé — je le déclare explicitement.")]),
+    (8, "Source 1 — Tunstall et al. (2022)",
+     "L'article de recherche obligatoire. Montrer qu'on l'a vraiment lu.",
+     ["Tunstall et al. 2022, publié conjointement par Hugging Face, Intel Labs et le UKP Lab "
+      "de l'université technique de Darmstadt.",
+      "Ce qu'il apporte : la méthode en deux étapes — comparaison de paires, puis "
+      "classifieur léger.",
+      "Le résultat de référence : 8 exemples par classe rivalisent avec un affinage sur "
+      "3 000 exemples.",
+      "Enchaîner vite : 20 à 25 secondes maximum."],
+     [("Avez-vous lu l'article en entier ?",
+       "Oui. Ce qui m'a le plus servi, c'est le mécanisme de génération de paires : c'est lui "
+       "qui explique pourquoi SetFit résiste là où un affinage classique s'effondre. Je le "
+       "réexplique en détail plus loin."),
+      ("Que reproche l'article aux méthodes antérieures ?",
+       "Leur dépendance à des consignes textuelles écrites à la main et à des modèles de "
+       "plusieurs milliards de paramètres. PET, par exemple, transforme la classification en "
+       "texte à trous : il faut rédiger la phrase-modèle et la table de correspondance "
+       "mot-catégorie. SetFit supprime cette dépendance — c'est le sens de « prompt-free ».")]),
 
-    (9, "SetFit : le principe", "Faire comprendre l'astuce contrastive à un non-spécialiste.",
+    (9, "Source 2 — Le blog Hugging Face (2022)",
+     "La source du code réutilisé. C'est ta slide de transparence.",
+     ["Rédigé par les auteurs de l'article eux-mêmes, avec du code exécutable.",
+      "C'est de là que viennent la librairie setfit et la structure d'entraînement.",
+      "Il détaille le banc d'essai RAFT : 71,3 % contre 62,7 % pour GPT-3."],
+     [("Un article de blog, est-ce une source sérieuse ?",
+       "Celui-ci l'est : il est écrit par les auteurs de l'article de recherche, publié sur le "
+       "site officiel de Hugging Face, et il accompagne une librairie open source largement "
+       "utilisée. Ce n'est pas un billet d'opinion, c'est la documentation de référence de la "
+       "méthode."),
+      ("Qu'avez-vous copié exactement ?",
+       "La façon d'appeler la librairie : instancier le modèle, lancer l'entraînement. Le "
+       "corpus, le protocole multi-régimes, les stratégies 4 et 5 et le tableau de bord sont "
+       "de moi.")]),
+
+    (10, "Source 3 — Ciancone et al. (2024)",
+     "La source qui justifie un choix technique précis : le socle d'embeddings.",
+     ["Premier banc d'essai massif de représentations de phrases en français.",
+      "Une cinquantaine de modèles comparés, sur 8 familles de tâches.",
+      "Sa conclusion : aucun modèle ne gagne partout, mais les bons multilingues rivalisent "
+      "avec les modèles français spécialisés."],
+     [("Pourquoi avoir besoin d'un banc d'essai pour choisir un socle ?",
+       "Parce que SetFit ne part pas de zéro : il a besoin d'un modèle qui sait déjà mesurer "
+       "la ressemblance entre phrases. Le choix de ce socle conditionne tout le reste, et "
+       "MTEB-fr est le seul banc d'essai qui compare ces modèles sur du français."),
+      ("Pourquoi ne pas avoir pris simplement le premier du classement ?",
+       "Parce que le classement dépend de la tâche — c'est justement la conclusion de "
+       "l'article : aucun modèle ne gagne partout. J'ai retenu un modèle multilingue bien "
+       "classé et compatible avec mon environnement d'entraînement.")]),
+
+    (11, "Les sources complémentaires",
+     "Montrer que chaque brique technique a sa source. Slide à survoler si tu es en retard.",
+     ["Reimers & Gurevych (2020) : la méthode de distillation qui a produit mon socle.",
+      "Warner et al. (2024) : ModernBERT. Marone et al. (2025) : mmBERT.",
+      "Martin et al. (2020) : CamemBERT, ma stratégie 2.",
+      "Si le temps manque : « et quatre sources complémentaires pour chaque variante "
+      "testée », puis enchaîner."],
+     [("Comment définissez-vous un algorithme « récent » ?",
+       "Trois critères : moins de cinq ans, publié sur un support reconnu, et disponible dans "
+       "une librairie libre et maintenue. SetFit date de 2022, et j'ai poussé la comparaison "
+       "jusqu'à des socles de 2024 et 2025.")]),
+
+    (12, "SetFit : le principe", "Faire comprendre l'astuce contrastive à un non-spécialiste.",
      ["Étape 1 : on apprend au modèle à rapprocher les mails de même catégorie et à éloigner "
       "les autres. Étape 2 : une régression logistique légère sur ces représentations.",
       "L'astuce : 128 mails produisent plusieurs milliers de paires.",
@@ -525,7 +577,7 @@ SLIDES = [
        "bien les catégories. Une tête légère suffit, s'entraîne en quelques secondes, et "
        "reste interprétable.")]),
 
-    (10, "Le système hybride", "Présenter l'architecture comme une décision d'ingénieur.",
+    (13, "Le système hybride", "Présenter l'architecture comme une décision d'ingénieur.",
      ["SetFit traite localement l'immense majorité des mails, gratuitement.",
       "Sous un seuil de confiance τ, le mail part vers le modèle génératif payant.",
       "τ est un curseur produit entre qualité, coût et latence.",
@@ -540,7 +592,7 @@ SLIDES = [
        "choisir le meilleur seuil régime par régime reviendrait à l'ajuster sur le jeu de "
        "test, ce qui fausserait la comparaison.")]),
 
-    (11, "Le protocole", "Prouver que la comparaison est méthodologiquement solide.",
+    (14, "Le protocole", "Prouver que la comparaison est méthodologiquement solide.",
      ["Cinq régimes : 8, 16, 32, 64 exemples par catégorie, puis données complètes.",
       "Cinq tirages par régime, pour mesurer la stabilité.",
       "Environ 380 expériences.",
@@ -555,7 +607,7 @@ SLIDES = [
        "0,875 et le révèle. En production, les catégories rares comme les indemnités sont "
        "justement celles qu'on ne peut pas se permettre d'ignorer.")]),
 
-    (12, "Résultats sur les mails", "Le résultat central du projet.",
+    (15, "Résultats sur les mails", "Le résultat central du projet.",
      ["SetFit atteint 0,95 dès 8 exemples par catégorie.",
       "CamemBERT s'effondre à 0,10.",
       "Les écarts se resserrent quand le volume augmente.",
@@ -573,7 +625,7 @@ SLIDES = [
        "« partenariat » suffisent presque à trancher. C'est aussi une conséquence du corpus "
        "synthétique, que j'assume comme limite.")]),
 
-    (13, "Vérification sur 20 Newsgroups", "Montrer que le résultat n'est pas un artefact.",
+    (16, "Vérification sur 20 Newsgroups", "Montrer que le résultat n'est pas un artefact.",
      ["Même hiérarchie que sur les mails.",
       "Textes plus longs et plus bruités : c'est un test plus dur.",
       "ModernBERT n'apparaît que sur ce corpus, car il est anglophone."],
@@ -587,7 +639,7 @@ SLIDES = [
        "distinguer talk.politics.guns de talk.religion.misc est intrinsèquement plus dur que "
        "distinguer une inscription d'une demande de sponsor.")]),
 
-    (14, "Avec toutes les données", "Le retournement : la baseline suffit.",
+    (17, "Avec toutes les données", "Le retournement : la baseline suffit.",
      ["Sur les mails, les quatre approches se rejoignent autour de 0,99.",
       "Le vocabulaire métier est très discriminant.",
       "C'est ce qui justifie de déployer le modèle le plus léger."],
@@ -595,7 +647,7 @@ SLIDES = [
        "À la situation qui pose problème : le démarrage. Un club établi n'a pas besoin de "
        "SetFit, un club qui arrive si. C'est tout l'objet de ma matrice de décision.")]),
 
-    (15, "Le modèle génératif", "Montrer l'alternative sans entraînement.",
+    (18, "Le modèle génératif", "Montrer l'alternative sans entraînement.",
      ["Aucun entraînement : la tâche est décrite en français dans la consigne.",
       "0,79 sans aucun exemple, 0,90 avec 8 exemples dans la consigne.",
       "400 à 600 ms par mail, et un coût par appel.",
@@ -605,7 +657,7 @@ SLIDES = [
        "fois supérieure à un modèle local, et les données sortent de chez le client. SetFit "
        "tourne en local, gratuitement, une fois entraîné.")]),
 
-    (16, "Le système hybride en chiffres", "Le meilleur résultat de l'étude.",
+    (19, "Le système hybride en chiffres", "Le meilleur résultat de l'étude.",
      ["À τ = 0,8 : F1 de 0,997, le meilleur score obtenu.",
       "Seuls 1,1 % des mails partent vers le modèle payant.",
       "Le gain est donc quasi gratuit.",
@@ -617,7 +669,7 @@ SLIDES = [
        "qui serait de l'optimisation sur le test. En production, on calibrerait τ sur un jeu "
        "de validation séparé.")]),
 
-    (17, "Le bug révélé par le LLM", "L'anecdote qui démontre ta rigueur. À raconter.",
+    (20, "Le bug révélé par le LLM", "L'anecdote qui démontre ta rigueur. À raconter.",
      ["Premier constat : le modèle génératif plafonnait à 0,18, à peine mieux que le hasard.",
       "Vérification des réponses brutes : il classait en réalité correctement.",
       "La cause : scikit-learn trie les catégories par ordre alphabétique, indépendamment de "
@@ -632,13 +684,13 @@ SLIDES = [
        "Tous les résultats présentés sont post-correction. C'est aussi ce qui m'a fait "
        "revérifier l'ensemble de la chaîne d'étiquetage.")]),
 
-    (18, "Interprétabilité globale", "Montrer que le modèle décide sur du sens métier.",
+    (21, "Interprétabilité globale", "Montrer que le modèle décide sur du sens métier.",
      ["La régression logistique est directement lisible : chaque mot porte un poids.",
       "Les mots décisifs correspondent au métier — c'est ce qui explique la robustesse.",
       "Citer deux exemples : « vestiaires » pour la logistique, « attestation » pour "
       "l'administratif."], []),
 
-    (19, "Interprétabilité locale", "La convergence entre les deux familles de modèles.",
+    (22, "Interprétabilité locale", "La convergence entre les deux familles de modèles.",
      ["Sur un même mail classé « logistique de match » : la régression logistique retient "
       "vestiaires, terrain, match, samedi.",
       "SetFit, expliqué par LIME, retient vestiaires, samedi, match, terrain.",
@@ -653,15 +705,16 @@ SLIDES = [
        "SHAP, fondé sur les valeurs de Shapley, offrirait des garanties théoriques — au prix "
        "d'un calcul bien plus lourd.")]),
 
-    (20, "Synthèse des résultats", "Répondre frontalement à la question du projet.",
+    (23, "Synthèse des résultats", "Répondre frontalement à la question du projet.",
      ["SetFit est décisivement supérieur là où le problème existe : 0,95 contre 0,84.",
       "CamemBERT n'exprime son potentiel qu'avec un historique conséquent.",
       "La baseline reste imbattable en rapport performance / simplicité quand les données "
       "abondent.",
       "Le génératif permet le démarrage immédiat, l'hybride le meilleur compromis."], []),
 
-    (21, "Le dashboard", "Passer en démonstration LIVE. Ne pas lire la diapositive.",
+    (24, "Le dashboard", "Passer en démonstration LIVE. Ne pas lire la diapositive.",
      ["Annoncer les trois volets, puis basculer sur le navigateur.",
+      "La capture reste en secours si le réseau fait défaut.",
       "Justifier le modèle servi : TF-IDF, quelques mégaoctets, réponse immédiate, "
       "performance équivalente en données complètes.",
       "Montrer l'URL publique : c'est la preuve du déploiement cloud."],
@@ -671,13 +724,22 @@ SLIDES = [
        "modèle 500 fois plus lourd pour un gain nul n'aurait pas de sens. La vraie limite, "
        "c'est que le dashboard ne montre qu'un profil de club sur les quatre.")]),
 
-    (22, "Volets 2 et 3", "Démontrer, pas décrire.",
-     ["Tirer un mail au hasard, le classer, montrer la confiance et le bandeau de vérification.",
-      "Basculer sur les courbes d'apprentissage.",
-      "Si le réseau lâche : revenir aux diapositives 12 à 16, qui contiennent les mêmes "
-      "graphiques."], []),
+    (25, "Volets 2 et 3", "Démontrer, pas décrire. Ta capture d'écran est un atout : sers-t'en.",
+     ["Tirer un mail au hasard, le classer, montrer la confiance et le bandeau vert de "
+      "vérification.",
+      "Puis basculer sur les courbes d'apprentissage.",
+      "À exploiter absolument : sur ta capture, le modèle local annonce 80 % de confiance "
+      "et voit juste, tandis que le modèle génératif trouve la même réponse mais annonce "
+      "50 %. C'est la démonstration visuelle de ton argument sur la confiance non calibrée.",
+      "Si le réseau lâche : la capture suffit, et les diapositives 15 à 19 contiennent les "
+      "mêmes graphiques."],
+     [("Cette confiance de 50 % du modèle génératif, qu'est-ce que ça veut dire ?",
+       "Justement rien de fiable. Ce nombre n'est pas calculé : le modèle l'écrit dans sa "
+       "réponse comme n'importe quel autre mot. Il annonçait très souvent 50 %, quelle que "
+       "soit la difficulté du mail. La confiance du modèle local, elle, sort d'un vrai calcul "
+       "de probabilité — c'est pourquoi mon système hybride se fonde sur elle.")]),
 
-    (23, "Mise en production et accessibilité", "Montrer la maturité d'ingénierie.",
+    (26, "Mise en production et accessibilité", "Montrer la maturité d'ingénierie.",
      ["Code versionné sur GitHub, application hébergée sur Streamlit Cloud.",
       "Dépendances allégées pour le déploiement.",
       "Clé d'API dans le mécanisme de secrets, jamais dans le code.",
@@ -688,7 +750,7 @@ SLIDES = [
        "Une personne daltonienne peut donc identifier chaque série sans distinguer les "
        "couleurs. C'est le critère 1.4.1 du référentiel WCAG.")]),
 
-    (24, "Conclusion", "La matrice de décision : c'est ton livrable intellectuel.",
+    (27, "Conclusion", "La matrice de décision : c'est ton livrable intellectuel.",
      ["Quatre profils de club, quatre stratégies.",
       "La phrase de fin : il n'existe pas de meilleur modèle universel, la bonne réponse "
       "dépend du volume de données et des contraintes de coût.",
@@ -705,7 +767,7 @@ SLIDES = [
        "reste valide, puisqu'ils affrontent tous exactement le même corpus, et la hiérarchie "
        "se confirme sur un corpus réel.")]),
 
-    (25, "Merci", "Remercier, et inviter aux questions.", [], []),
+    (28, "Merci", "Remercier, et inviter aux questions.", [], []),
 ]
 
 
@@ -831,11 +893,17 @@ def build():
               "transversales suivies de l'antisèche chiffrée.", color=GRIS, size=10)
 
     p = doc.add_paragraph()
-    r = p.add_run("Minutage : 5 min (plan prévisionnel) — 10 min (démarche) — 5 min (dashboard)")
+    r = p.add_run("28 diapositives — 5 min (plan prévisionnel) · 10 min (démarche) · "
+                  "5 min (dashboard)")
     r.bold = True
     r.font.size = Pt(11)
     r.font.color.rgb = VERT
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    para(doc, "Rythme à tenir : diapositives 4 à 11 en 5 minutes, soit environ 35 secondes "
+              "chacune — les quatre diapositives de sources doivent passer en 20 à 25 secondes. "
+              "Diapositives 12 à 23 en 10 minutes, soit 50 secondes. Diapositives 24 à 26 en "
+              "démonstration live.", italic=True, color=GRIS, size=10)
 
     doc.add_page_break()
     partie_a_glossaire(doc)
