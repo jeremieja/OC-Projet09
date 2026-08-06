@@ -10,6 +10,9 @@ Usage :
 from pathlib import Path
 
 from docx import Document
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
 
 OUT = Path(__file__).parents[1] / "Preparation_soutenance_biblio.docx"
@@ -18,6 +21,36 @@ OUT = Path(__file__).parents[1] / "Preparation_soutenance_biblio.docx"
 BLEU = RGBColor(0x0F, 0x4C, 0x81)
 VERT = RGBColor(0x1B, 0x7F, 0x4B)
 GRIS = RGBColor(0x55, 0x55, 0x55)
+LIEN = "0563C1"
+
+
+def hyperlink(paragraph, url, texte):
+    """
+    Insère un lien cliquable dans un paragraphe.
+
+    python-docx n'expose pas les hyperliens : on construit donc directement
+    l'élément XML <w:hyperlink> et on l'attache à la relation externe du document.
+    """
+    r_id = paragraph.part.relate_to(url, RT.HYPERLINK, is_external=True)
+    lien = OxmlElement("w:hyperlink")
+    lien.set(qn("r:id"), r_id)
+
+    run = OxmlElement("w:r")
+    props = OxmlElement("w:rPr")
+    couleur = OxmlElement("w:color")
+    couleur.set(qn("w:val"), LIEN)
+    props.append(couleur)
+    souligne = OxmlElement("w:u")
+    souligne.set(qn("w:val"), "single")
+    props.append(souligne)
+    run.append(props)
+
+    texte_el = OxmlElement("w:t")
+    texte_el.text = texte
+    run.append(texte_el)
+    lien.append(run)
+    paragraph._p.append(lien)
+    return paragraph
 
 
 def h_title(doc, text):
@@ -113,6 +146,7 @@ def build():
     refs = [
         {
             "titre": "1. Tunstall et al. (2022) — SetFit : Efficient Few-Shot Learning Without Prompts",
+            "url": "https://arxiv.org/abs/2209.11055",
             "ref": "arXiv:2209.11055 — article de recherche fondateur (référence obligatoire).",
             "role": "Cœur de ma stratégie 3. C'est LA méthode few-shot du POC, celle qui "
                     "résout le problème du « nouveau club sans données étiquetées ».",
@@ -130,7 +164,8 @@ def build():
                 "8 exemples/classe sur Customer Reviews ≈ RoBERTa Large fine-tuné sur 3 000 exemples.",
                 "RAFT : SetFit (355M) = 71,3 % > PET (69,6 %) > GPT-3 175B (62,7 %) ; T-Few 11B = 75,8 %.",
                 "Bat la performance humaine sur 7 des 11 tâches RAFT.",
-                "Entraînement : 30 s sur V100 pour 0,025 $ (vs T-Few 3B : 11 min / 0,70 $) → 28× plus rapide.",
+                "Entraînement : 30 s sur V100 pour 0,025 $ (vs T-Few 3B : 11 min / 0,70 $) "
+                "→ 22× plus rapide et 28× moins cher.",
             ],
             "jury": "« Pourquoi SetFit et pas un simple fine-tuning ? » → Parce qu'avec 8-30 "
                     "exemples par classe (cas du nouveau club), le fine-tuning classique "
@@ -139,6 +174,7 @@ def build():
         },
         {
             "titre": "2. Hugging Face Blog (2022) — SetFit (article de vulgarisation officiel)",
+            "url": "https://huggingface.co/blog/setfit",
             "ref": "huggingface.co/blog/setfit — illustre le papier avec du code de référence.",
             "role": "Source du code de pipeline que j'ai réutilisé (déclaration de transparence) "
                     "et des chiffres de comparaison que je cite.",
@@ -157,6 +193,7 @@ def build():
         },
         {
             "titre": "3. Martin et al. (2020) — CamemBERT",
+            "url": "https://arxiv.org/abs/1911.03894",
             "ref": "arXiv:1911.03894 — ACL 2020. Modèle de référence pour le français.",
             "role": "Ma stratégie 2 (fine-tuning classique). Représente l'approche "
                     "« data-driven » : excellent SI le club a beaucoup de données.",
@@ -177,6 +214,7 @@ def build():
         },
         {
             "titre": "4. Ciancone et al. (2024) — MTEB-fr",
+            "url": "https://arxiv.org/abs/2405.20468",
             "ref": "arXiv:2405.20468 — extension du Massive Text Embedding Benchmark au français.",
             "role": "Justifie scientifiquement mon choix de backbone pour SetFit et de "
                     "CamemBERT. Benchmark de référence pour choisir un modèle d'embedding FR.",
@@ -198,6 +236,7 @@ def build():
         },
         {
             "titre": "5. Reimers & Gurevych (2020) — Sentence Embeddings multilingues par distillation",
+            "url": "https://arxiv.org/abs/2004.09813",
             "ref": "arXiv:2004.09813 — EMNLP 2020.",
             "role": "Fondement technique de mon backbone SetFit retenu "
                     "(paraphrase-multilingual-mpnet-base-v2).",
@@ -215,6 +254,7 @@ def build():
         },
         {
             "titre": "6. Warner et al. (2024) — ModernBERT",
+            "url": "https://arxiv.org/abs/2412.13663",
             "ref": "arXiv:2412.13663 — Answer.AI & LightOn. Encodeur de référence 2024.",
             "role": "Variante de backbone SetFit que je teste pour la question centrale : "
                     "modernité architecturale vs modèle multilingue établi.",
@@ -234,6 +274,7 @@ def build():
         },
         {
             "titre": "7. Wasserblat (2025) — SetFit + ModernBERT en few-shot",
+            "url": "",
             "ref": "Medium — évaluation récente de l'association SetFit + ModernBERT.",
             "role": "Justifie l'exploration de backbones ModernBERT/mmBERT dans mon SetFit.",
             "retenir": [
@@ -250,6 +291,7 @@ def build():
         },
         {
             "titre": "8. Marone et al. (2025) — mmBERT",
+            "url": "https://huggingface.co/blog/mmbert",
             "ref": "huggingface.co/blog/mmbert — JHU-CLSP. Le backbone le plus récent testé.",
             "role": "Variante de backbone SetFit la plus récente : le seul à réunir modernité "
                     "architecturale ET couverture multilingue native. Tranche ma question centrale.",
@@ -270,6 +312,7 @@ def build():
         },
         {
             "titre": "9. Mistral AI (2025) — Ministral 8B (documentation La Plateforme)",
+            "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
             "ref": "docs.mistral.ai — modèles edge Apache 2.0, hébergement européen (RGPD).",
             "role": "Ma stratégie 4 (LLM-as-classifier) et brique du système hybride (stratégie 5).",
             "retenir": [
@@ -292,6 +335,19 @@ def build():
     for r in refs:
         h2(doc, r["titre"])
         para(doc, r["ref"], italic=True, color=GRIS, size=10)
+
+        # Lien cliquable vers la source (ou rappel de le compléter si l'URL manque).
+        p = doc.add_paragraph()
+        run = p.add_run("Lien : ")
+        run.bold = True
+        run.font.size = Pt(10)
+        if r["url"]:
+            hyperlink(p, r["url"], r["url"])
+        else:
+            manque = p.add_run("[URL exacte à récupérer et coller ici]")
+            manque.italic = True
+            manque.font.color.rgb = RGBColor(0xB8, 0x5C, 0x00)
+
         field(doc, "Rôle dans mon POC", r["role"])
 
         p = doc.add_paragraph()
@@ -310,6 +366,31 @@ def build():
 
         field(doc, "Question probable du jury", r["jury"], label_color=RGBColor(0xB8, 0x5C, 0x00))
         doc.add_paragraph()
+
+    # ── Les modèles effectivement utilisés ───────────────────────────
+    h1(doc, "Les modèles utilisés (pages officielles)")
+    para(doc, "À citer si le jury demande précisément quel poids de modèle a été chargé.",
+         italic=True, color=GRIS, size=10)
+    modeles = [
+        ("Backbone SetFit principal (multilingue)",
+         "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+         "https://huggingface.co/sentence-transformers/paraphrase-multilingual-mpnet-base-v2"),
+        ("Variante SetFit anglophone (2024)", "answerdotai/ModernBERT-base",
+         "https://huggingface.co/answerdotai/ModernBERT-base"),
+        ("Variante SetFit multilingue récente (2025)", "jhu-clsp/mmBERT-base",
+         "https://huggingface.co/jhu-clsp/mmBERT-base"),
+        ("Fine-tuning français (stratégie 2)", "almanach/camembert-base",
+         "https://huggingface.co/almanach/camembert-base"),
+        ("Librairie SetFit", "huggingface/setfit", "https://github.com/huggingface/setfit"),
+    ]
+    for role, nom, url in modeles:
+        p = doc.add_paragraph(style="List Bullet")
+        r = p.add_run(f"{role} — ")
+        r.bold = True
+        r.font.size = Pt(10)
+        r2 = p.add_run(f"{nom} : ")
+        r2.font.size = Pt(10)
+        hyperlink(p, url, "page du modèle")
 
     # ── Fil narratif final ───────────────────────────────────────────
     doc.add_page_break()
