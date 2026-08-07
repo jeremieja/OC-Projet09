@@ -53,3 +53,5 @@ Thumbs.db
 *.odt
 *.odp
 *.xlsx
+# Fichiers nommés selon la convention de rendu, quelle que soit l'extension.
+Jambon_Jeremie_*
