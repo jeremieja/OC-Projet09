@@ -883,14 +883,99 @@ def partie_c_transversal(doc):
         bullet(doc, t)
 
 
+SCRIPTS = [
+    ("generate_dataset.py", "Crée le corpus métier",
+     "Génère les 1 800 mails via un grand modèle de langue, à partir de consignes "
+     "structurées. Reprend automatiquement là où il s'est arrêté en cas d'interruption : "
+     "les catégories déjà produites sont détectées et sautées."),
+    ("run_baseline.py", "Stratégie 1 — TF-IDF + régression logistique",
+     "Lance 25 expériences par corpus (5 régimes × 5 tirages) et enregistre chaque "
+     "résultat dans un fichier séparé. C'est la référence à battre."),
+    ("run_camembert.py", "Stratégie 2 — affinage de CamemBERT",
+     "Mêmes 25 expériences par corpus. Chaque run réentraîne CamemBERT depuis le modèle "
+     "pré-entraîné sur le sous-ensemble correspondant. C'est le script le plus long : "
+     "quelques minutes par run sur données complètes."),
+    ("run_setfit.py", "Stratégie 3 — SetFit, l'algorithme récent étudié",
+     "Lance les runs pour les trois socles, sur les corpus compatibles avec chacun : "
+     "ModernBERT étant anglophone et mmBERT multilingue, tous ne tournent pas sur les "
+     "deux corpus."),
+    ("run_ministral.py", "Stratégie 4 — le modèle génératif comme classifieur",
+     "Aucun entraînement : évalue directement le modèle via l'API, en deux modes — sans "
+     "aucun exemple, puis avec 8 exemples glissés dans la consigne."),
+    ("run_hybrid.py", "Stratégie 5 — le routage par confiance",
+     "Pour chaque configuration, entraîne SetFit puis balaie sept seuils de confiance τ, "
+     "en escaladant vers le modèle génératif les mails sous le seuil. Produit le couple "
+     "qualité / taux d'escalade pour chaque τ."),
+    ("run_all.py", "L'orchestrateur",
+     "Enchaîne les six étapes dans l'ordre logique, chaque script tournant dans son propre "
+     "processus — ce qui isole la mémoire et rend les erreurs traçables. C'est le point "
+     "d'entrée pour tout reproduire."),
+    ("dump_predictions.py", "Prépare l'analyse qualitative des erreurs",
+     "Entraîne chaque modèle sur une configuration de référence, puis enregistre pour "
+     "chaque mail de test la vraie catégorie et la prédiction de chaque modèle. Alimente "
+     "le notebook d'analyse des erreurs."),
+    ("feature_importance.py", "Produit l'analyse d'interprétabilité",
+     "Calcule l'importance globale (les mots de plus fort poids par catégorie, lisibles "
+     "directement dans la régression logistique) et l'importance locale via LIME pour "
+     "SetFit, qui est une boîte noire."),
+    ("save_deploy_model.py", "Fabrique le modèle mis en ligne",
+     "Entraîne et enregistre le modèle TF-IDF léger servi par le tableau de bord. Les "
+     "modèles lourds pèsent plusieurs gigaoctets et réclament une carte graphique : "
+     "impossibles à héberger sur l'offre gratuite."),
+    ("make_slide_figures.py", "Génère les graphiques du support",
+     "Produit les figures à partir des résultats réels : courbes d'apprentissage, "
+     "comparaison sur données complètes, arbitrage du système hybride. Palette adaptée "
+     "aux déficiences de vision des couleurs, doublée d'un encodage par forme."),
+]
+
+
+def partie_d_scripts(doc):
+    doc.add_page_break()
+    h1(doc, "PARTIE D — À quoi sert chaque script")
+    para(doc, "De quoi répondre si le jury demande comment le projet est organisé, ou "
+              "comment reproduire les résultats.", italic=True, color=GRIS, size=10)
+
+    for nom, role, detail in SCRIPTS:
+        p = doc.add_paragraph()
+        r = p.add_run(nom)
+        r.bold = True
+        r.font.color.rgb = BLEU
+        r.font.size = Pt(11)
+        r2 = p.add_run(f"  —  {role}")
+        r2.font.size = Pt(10.5)
+        r2.font.color.rgb = VERT
+        p.paragraph_format.space_before = Pt(9)
+        p.paragraph_format.space_after = Pt(2)
+
+        p2 = doc.add_paragraph()
+        r3 = p2.add_run(detail)
+        r3.font.size = Pt(10.5)
+        p2.paragraph_format.space_after = Pt(4)
+
+    para(doc, "Pour tout reproduire : une seule commande, python scripts/run_all.py — "
+              "elle enchaîne la génération du corpus puis les cinq stratégies.",
+         italic=True, color=GRIS, size=10)
+
+    h2(doc, "Comment le code est rangé")
+    for t, d in [
+        ("src/data/", "chargement des deux corpus et tirage stratifié reproductible"),
+        ("src/models/", "une implémentation par stratégie"),
+        ("src/evaluation/", "calcul des métriques et agrégation des résultats"),
+        ("dashboard/", "l'application, qui importe src/ pour charger données et modèles"),
+        ("notebooks/", "les quatre analyses : exploration, résultats, erreurs, décision"),
+    ]:
+        bullet(doc, d, f"{t} — ")
+
+
 def build():
     doc = Document()
     titre(doc, "Note de révision — Soutenance")
     para(doc, "POC Classification de mails de clubs sportifs — Projet 9",
          italic=True, color=GRIS, size=12)
-    para(doc, "Trois parties : le glossaire de tous les termes techniques, le déroulé "
-              "diapositive par diapositive avec les questions probables, et les questions "
-              "transversales suivies de l'antisèche chiffrée.", color=GRIS, size=10)
+    para(doc, "Quatre parties : le glossaire de tous les termes techniques, le déroulé "
+              "diapositive par diapositive avec les questions probables, les questions "
+              "transversales suivies de l'antisèche chiffrée, et le rôle de chaque script "
+              "du projet.", color=GRIS, size=10)
 
     p = doc.add_paragraph()
     r = p.add_run("28 diapositives — 5 min (plan prévisionnel) · 10 min (démarche) · "
@@ -909,6 +994,7 @@ def build():
     partie_a_glossaire(doc)
     partie_b_slides(doc)
     partie_c_transversal(doc)
+    partie_d_scripts(doc)
 
     doc.save(OUT)
     print(f"Document généré : {OUT}")
