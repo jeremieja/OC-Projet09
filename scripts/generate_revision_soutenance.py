@@ -929,12 +929,49 @@ SCRIPTS = [
 ]
 
 
+DASHBOARD = [
+    ("dashboard/app.py", "L'application elle-même (environ 520 lignes)",
+     "Le point d'entrée du tableau de bord : il construit les trois volets, charge le "
+     "modèle léger et les résultats d'expériences, et gère l'appel optionnel au modèle "
+     "génératif. C'est ce fichier que Streamlit Cloud exécute."),
+    ("dashboard/text_analysis.py", "Les analyses de l'onglet exploration",
+     "Regroupe les calculs sur le texte : longueur des messages, fréquence des mots, "
+     "nuage de mots. Séparé de l'application pour que la logique d'analyse reste testable "
+     "indépendamment de l'affichage."),
+    ("dashboard/theme.py", "La charte visuelle et l'accessibilité",
+     "Centralise la palette et les repères de mise en forme. C'est ici qu'est appliquée "
+     "la conformité au référentiel WCAG : palette distinguable en cas de déficience de "
+     "vision des couleurs, et information jamais portée par la couleur seule."),
+]
+
+
 def partie_d_scripts(doc):
     doc.add_page_break()
-    h1(doc, "PARTIE D — À quoi sert chaque script")
+    h1(doc, "PARTIE D — À quoi sert chaque fichier")
     para(doc, "De quoi répondre si le jury demande comment le projet est organisé, ou "
               "comment reproduire les résultats.", italic=True, color=GRIS, size=10)
 
+    h2(doc, "L'application déployée")
+    for nom, role, detail in DASHBOARD:
+        p = doc.add_paragraph()
+        r = p.add_run(nom)
+        r.bold = True
+        r.font.color.rgb = BLEU
+        r.font.size = Pt(11)
+        r2 = p.add_run(f"  —  {role}")
+        r2.font.size = Pt(10.5)
+        r2.font.color.rgb = VERT
+        p.paragraph_format.space_before = Pt(9)
+        p.paragraph_format.space_after = Pt(2)
+        p2 = doc.add_paragraph()
+        r3 = p2.add_run(detail)
+        r3.font.size = Pt(10.5)
+        p2.paragraph_format.space_after = Pt(4)
+
+    para(doc, "Pour la lancer en local : streamlit run dashboard/app.py",
+         italic=True, color=GRIS, size=10)
+
+    h2(doc, "Les scripts d'expérimentation")
     for nom, role, detail in SCRIPTS:
         p = doc.add_paragraph()
         r = p.add_run(nom)
@@ -959,12 +996,20 @@ def partie_d_scripts(doc):
     h2(doc, "Comment le code est rangé")
     for t, d in [
         ("src/data/", "chargement des deux corpus et tirage stratifié reproductible"),
-        ("src/models/", "une implémentation par stratégie"),
+        ("src/models/", "une implémentation par stratégie (baseline, CamemBERT, SetFit, "
+                        "Ministral, hybride)"),
         ("src/evaluation/", "calcul des métriques et agrégation des résultats"),
+        ("scripts/", "les points d'entrée qui lancent les expériences"),
         ("dashboard/", "l'application, qui importe src/ pour charger données et modèles"),
         ("notebooks/", "les quatre analyses : exploration, résultats, erreurs, décision"),
+        ("results/", "les 383 résultats d'expériences et leur agrégat"),
     ]:
         bullet(doc, d, f"{t} — ")
+
+    para(doc, "Le principe : src/ contient la logique réutilisable, scripts/ et dashboard/ "
+              "ne font que l'appeler. C'est ce qui permet au tableau de bord et aux "
+              "notebooks de partager exactement le même code de chargement des données.",
+         italic=True, color=GRIS, size=10)
 
 
 def build():
