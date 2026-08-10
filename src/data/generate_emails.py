@@ -1,9 +1,13 @@
 """
-Generates the synthetic sports club emails dataset via Anthropic API (Claude).
-Produces ~1800 emails across 8 business categories with controlled variation
-in length, tone, urgency, sender persona, and sport.
+Génération du jeu de données synthétique de mails de clubs sportifs, via l'API
+d'un grand modèle de langue.
 
-Uses prompt caching on the system prompt to reduce cost across the 1800 calls.
+Produit environ 1 800 mails répartis sur 8 catégories métier, avec des variations
+contrôlées de longueur, de ton, d'urgence, de profil d'expéditeur et de sport,
+afin d'éviter un corpus stéréotypé.
+
+La consigne système est mise en cache d'un appel à l'autre, ce qui réduit
+sensiblement le coût sur l'ensemble des 1 800 requêtes.
 """
 import json
 import os
