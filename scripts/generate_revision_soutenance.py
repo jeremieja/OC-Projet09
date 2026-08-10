@@ -929,6 +929,51 @@ SCRIPTS = [
 ]
 
 
+SRC = [
+    ("src/models/baseline.py", "Stratégie 1 — TF-IDF + régression logistique",
+     "L'implémentation de la baseline : vectorisation en n-grammes de 1 à 2 mots, "
+     "pondération logarithmique, puis régression logistique à poids équilibrés. C'est ce "
+     "modèle qui est déployé en ligne."),
+    ("src/models/camembert.py", "Stratégie 2 — affinage de CamemBERT",
+     "Réentraîne le modèle français pré-entraîné sur les 8 catégories. Hyperparamètres "
+     "maintenus constants sur tous les régimes pour que la courbe d'apprentissage reste "
+     "comparable — c'est ce qui explique la non-convergence à 8 exemples."),
+    ("src/models/setfit_model.py", "Stratégie 3 — SetFit",
+     "Les deux étapes de la méthode : affinage par comparaison de paires, puis tête de "
+     "classification légère. C'est ici que sont déclarés les trois socles comparés et le "
+     "plafond de paires qui borne le coût quadratique."),
+    ("src/models/ministral.py", "Stratégie 4 — le modèle génératif via API",
+     "Construit la consigne, appelle l'API, et analyse la réponse au format JSON. Gère "
+     "aussi les deux modes (avec ou sans exemples) et le chiffrage du coût par appel."),
+    ("src/models/hybrid.py", "Stratégie 5 — le routage par confiance",
+     "Combine les prédictions des deux modèles selon le seuil τ : en dessous, la "
+     "prédiction du modèle génératif remplace celle de SetFit. Mesure au passage le taux "
+     "d'escalade et le coût."),
+    ("src/data/email_dataset.py", "Chargement du corpus métier",
+     "Lit le fichier des 1 800 mails, expose la liste des 8 catégories et les "
+     "correspondances catégorie/indice attendues par les modèles."),
+    ("src/data/generate_emails.py", "Génération du corpus par modèle de langue",
+     "Le moteur appelé par le script de génération : construit les consignes avec leurs "
+     "variations contrôlées, appelle l'API et enregistre catégorie par catégorie."),
+    ("src/data/newsgroups.py", "Chargement du corpus de validation",
+     "Charge les 8 classes retenues de 20 Newsgroups et nettoie les en-têtes et citations. "
+     "C'est ici qu'est traitée la correspondance texte/étiquette, à l'origine du bug "
+     "révélé par le modèle génératif."),
+    ("src/data/sampling.py", "L'échantillonnage stratifié reproductible",
+     "Produit les sous-ensembles d'entraînement pour chaque régime et chaque tirage, en "
+     "garantissant le même nombre d'exemples par catégorie. Piloté par la graine "
+     "aléatoire, donc rejouable à l'identique."),
+    ("src/evaluation/metrics.py", "Le calcul des métriques",
+     "Centralise le F1 macro et les mesures complémentaires, pour que tous les modèles "
+     "soient évalués exactement de la même façon."),
+    ("src/evaluation/results.py", "Sauvegarde et agrégation des résultats",
+     "Enregistre chaque expérience dans son propre fichier, puis les recharge et les "
+     "agrège en moyennes et dispersions. C'est la source des courbes du tableau de bord."),
+    ("src/utils/logging.py", "Le journal partagé",
+     "Un format de messages commun à tous les scripts, pour suivre des campagnes qui "
+     "durent plusieurs heures."),
+]
+
 DASHBOARD = [
     ("dashboard/app.py", "L'application elle-même (environ 520 lignes)",
      "Le point d'entrée du tableau de bord : il construit les trois volets, charge le "
@@ -951,43 +996,41 @@ def partie_d_scripts(doc):
     para(doc, "De quoi répondre si le jury demande comment le projet est organisé, ou "
               "comment reproduire les résultats.", italic=True, color=GRIS, size=10)
 
-    h2(doc, "L'application déployée")
-    for nom, role, detail in DASHBOARD:
-        p = doc.add_paragraph()
-        r = p.add_run(nom)
-        r.bold = True
-        r.font.color.rgb = BLEU
-        r.font.size = Pt(11)
-        r2 = p.add_run(f"  —  {role}")
-        r2.font.size = Pt(10.5)
-        r2.font.color.rgb = VERT
-        p.paragraph_format.space_before = Pt(9)
-        p.paragraph_format.space_after = Pt(2)
-        p2 = doc.add_paragraph()
-        r3 = p2.add_run(detail)
-        r3.font.size = Pt(10.5)
-        p2.paragraph_format.space_after = Pt(4)
+    def liste_fichiers(entrees):
+        for nom, role, detail in entrees:
+            p = doc.add_paragraph()
+            r = p.add_run(nom)
+            r.bold = True
+            r.font.color.rgb = BLEU
+            r.font.size = Pt(11)
+            r2 = p.add_run(f"  —  {role}")
+            r2.font.size = Pt(10.5)
+            r2.font.color.rgb = VERT
+            p.paragraph_format.space_before = Pt(9)
+            p.paragraph_format.space_after = Pt(2)
 
+            p2 = doc.add_paragraph()
+            r3 = p2.add_run(detail)
+            r3.font.size = Pt(10.5)
+            p2.paragraph_format.space_after = Pt(4)
+
+    h2(doc, "L'application déployée")
+    liste_fichiers(DASHBOARD)
     para(doc, "Pour la lancer en local : streamlit run dashboard/app.py",
          italic=True, color=GRIS, size=10)
 
-    h2(doc, "Les scripts d'expérimentation")
-    for nom, role, detail in SCRIPTS:
-        p = doc.add_paragraph()
-        r = p.add_run(nom)
-        r.bold = True
-        r.font.color.rgb = BLEU
-        r.font.size = Pt(11)
-        r2 = p.add_run(f"  —  {role}")
-        r2.font.size = Pt(10.5)
-        r2.font.color.rgb = VERT
-        p.paragraph_format.space_before = Pt(9)
-        p.paragraph_format.space_after = Pt(2)
+    doc.add_page_break()
+    h2(doc, "Le cœur du code : src/")
+    para(doc, "C'est ici que tout est réellement implémenté. Les scripts ci-après ne font "
+              "que l'appeler. Si le jury demande à voir le code d'une stratégie, c'est dans "
+              "src/models/ qu'il faut aller.", italic=True, color=GRIS, size=10)
+    liste_fichiers(SRC)
 
-        p2 = doc.add_paragraph()
-        r3 = p2.add_run(detail)
-        r3.font.size = Pt(10.5)
-        p2.paragraph_format.space_after = Pt(4)
+    doc.add_page_break()
+    h2(doc, "Les scripts d'expérimentation")
+    para(doc, "Les points d'entrée : ils orchestrent les régimes et les tirages, puis "
+              "délèguent le calcul aux modules de src/.", italic=True, color=GRIS, size=10)
+    liste_fichiers(SCRIPTS)
 
     para(doc, "Pour tout reproduire : une seule commande, python scripts/run_all.py — "
               "elle enchaîne la génération du corpus puis les cinq stratégies.",
