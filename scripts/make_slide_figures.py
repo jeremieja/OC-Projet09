@@ -251,6 +251,63 @@ def eda_emails(fname: str):
     print(f"  {fname}")
 
 
+def lime_local(fname: str, n_mots: int = 8):
+    """
+    Explication locale d'une prédiction SetFit : quels mots poussent vers la
+    catégorie prédite, et lesquels l'en éloignent.
+
+    Forme retenue : barres divergentes. La donnée porte une POLARITÉ (pour /
+    contre), pas seulement une magnitude — l'axe zéro devient le point de
+    lecture. Deux teintes seulement, et le sens est aussi donné par le côté
+    de l'axe : l'information ne repose donc jamais sur la seule couleur.
+    """
+    src = ROOT / "results" / "interpretability" / "lime_setfit_local.json"
+    d = json.loads(src.read_text(encoding="utf-8"))
+
+    mots = d["mots_influents"][:n_mots]
+    mots = sorted(mots, key=lambda m: m["poids"])
+    noms = [m["mot"] for m in mots]
+    poids = [m["poids"] for m in mots]
+
+    POUR = "#0072B2"     # bleu : pousse vers la catégorie prédite
+    CONTRE = "#D55E00"   # vermillon : pousse contre
+
+    fig, ax = plt.subplots(figsize=(9, 4.6), dpi=200)
+    couleurs = [POUR if p > 0 else CONTRE for p in poids]
+    barres = ax.barh(noms, poids, color=couleurs, height=0.62)
+
+    # Valeur au bout de chaque barre, du côté où elle pointe.
+    for b, p in zip(barres, poids):
+        decalage = 0.004 if p > 0 else -0.004
+        ax.text(b.get_width() + decalage, b.get_y() + b.get_height() / 2,
+                f"{p:+.3f}".replace(".", ","),
+                va="center", ha="left" if p > 0 else "right",
+                fontsize=11, color=INK_SOFT)
+
+    ax.axvline(0, color=INK_SOFT, linewidth=1.2)
+    _style_axes(ax)
+    ax.grid(axis="y", visible=False)
+
+    marge = max(abs(min(poids)), max(poids)) * 1.35
+    ax.set_xlim(-marge, marge)
+    ax.set_xlabel("Poids attribué par LIME")
+
+    # Une bande libre est réservée au-dessus des barres pour nommer les deux
+    # pôles : sous l'axe, ils entreraient en collision avec les graduations.
+    haut = len(noms) - 1
+    ax.set_ylim(-0.7, haut + 1.15)
+    ax.text(-marge * 0.97, haut + 0.62, "◀  pousse vers une autre catégorie",
+            color=CONTRE, fontsize=11.5, fontweight="bold", ha="left", va="center")
+    ax.text(marge * 0.97, haut + 0.62, "pousse vers la catégorie prédite  ▶",
+            color=POUR, fontsize=11.5, fontweight="bold", ha="right", va="center")
+
+    ax.set_title(f"Un mail prédit « {d['prediction']} » : ce qui a pesé",
+                 fontweight="bold", pad=16)
+
+    fig.savefig(OUT / fname, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     df = load_agg()
     print("Figures générées :")
@@ -265,6 +322,7 @@ def main():
     fulldata_bars(df, "fig_fulldata.png")
     hybrid_tradeoff("fig_hybride.png")
     eda_emails("fig_eda_emails.png")
+    lime_local("fig_lime_local.png")
     print(f"\nDossier : {OUT}")
 
 
